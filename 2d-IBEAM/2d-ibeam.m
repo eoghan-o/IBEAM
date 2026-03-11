@@ -306,7 +306,7 @@ function val = integrate_tri(v, i, j)
     end
 end
 
-function W = compute_w(vertices)
+function W = assemble_weight_matrix(vertices)
     w = zeros(6,1);
 
     v1 = vertices([1 2 3], :);
