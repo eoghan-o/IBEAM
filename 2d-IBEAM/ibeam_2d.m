@@ -1,9 +1,47 @@
 close all;
 
+% [elements, nodes, n_nodes] = generate_perturbed_mesh(2,0);
+% indices = elements(1, :);
+% v = nodes(indices, :);
+% 
+% i = 1;
+% j = 2;
+% 
+% t1 = v([1 2 3], :);
+% t2 = v([1 3 4], :);
+% 
+% [qp1, w1] = tri_gauss3(t1);
+% [qp2, w2] = tri_gauss3(t2);
+% 
+% I1 = 0;
+% I2 = 0;
+% for k = 1:3
+%     [phi1, dphi1] = wachspress2d(v, qp1(k,:));
+%     [phi2, dphi2] = wachspress2d(v, qp2(k,:));
+% 
+%     I1 = I1 + w1(k)*dot(dphi1(i,:),dphi1(j,:));
+%     I2 = I2 + w2(k)*dot(dphi2(i,:),dphi2(j,:));
+% end
+% I = I1 + I2;
+% 
+% [qp1, w1] = tri_gauss9(t1);
+% [qp2, w2] = tri_gauss9(t2);
+% 
+% I1 = 0;
+% I2 = 0;
+% for k = 1:9
+%     [phi1, dphi1] = wachspress2d(v, qp1(k,:));
+%     [phi2, dphi2] = wachspress2d(v, qp2(k,:));
+% 
+%     I1 = I1 + w1(k)*dot(dphi1(i,:),dphi1(j,:));
+%     I2 = I2 + w2(k)*dot(dphi2(i,:),dphi2(j,:));
+% end
+% I9 = I1 + I2;
+
 b = [1; 2];
 f_value = @(x,y) 1 + (x-x);
 k_values = 4:6;
-a_values = (1/10).^(2:5);
+a_values = (1/10).^(1:2);
 
 num_plots = length(k_values);
 H1_ibeam_k = zeros(length(k_values),length(a_values));
@@ -13,12 +51,12 @@ for idx = 1:num_plots
     k = k_values(idx);
     n = 2^k + 1;
     h = 1/(n-1);
-    perturb = .5*h;
+    perturb = 0*h;
     [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb);
 
     for a_idx = 1:length(a_values)
         a = a_values(a_idx);
-        f_value = @(x,y) 0 + a*2*sin(x+y) - (b(1) + b(2)) * cos(x + y);
+        f_value = @(x,y) (x-x) + 0; %@(x,y) 0 + a*2*sin(x+y) - (b(1) + b(2)) * cos(x + y);
         [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes);
         H1_ibeam_k(idx,a_idx) = H1_error(u_ibeam,elements,nodes);
         L2_ibeam_k(idx,a_idx) = L2_error(u_ibeam,elements,nodes);
@@ -49,8 +87,8 @@ legend('\alpha = 0.1', '\alpha = 0.01', '\alpha = 1E-3', '\alpha = 1E-4', 'O(h)'
 
 function value = true_solution(a, x, y)
     %value = x.*(1 - exp((y-1)./a))./(1-exp(-2/a));
-    %value = 0;
-    value = sin(x+y);
+    value = 0;
+    %value = sin(x+y);
 end
 
 function err = L2_error(u,elements,nodes)
@@ -158,14 +196,15 @@ end
 function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes)
     n = 2^k + 1;
     %f = zeros(n_nodes,1);
-    f = build_rhs(n, f_value);
+    f = build_rhs(elements, nodes, n_nodes, f_value);
 
     A = sparse(n_nodes, n_nodes);
 
     %G_T = [-1 1 0 0; -1 0 1 0; 0 -1 0 1; 0 0 -1 1; -1 0 0 1; 0 -1 1 0];
     G_T = [-1 1 0 0; 0 -1 1 0; 0 0 -1 1; 1 0 0 -1; -1 0 1 0; 0 -1 0 1];
     local_edge = [2 1; 3 2; 4 3; 1 4; 3 1; 2 4];
-    w = [1/6 1/6 1/6 1/6 1/3 1/3]';
+    %w = [1/6 1/6 1/6 1/6 1/3 1/3]';
+    w = [0.42 0.42 0.42 0.42 0.31 0.31];
     W = diag(w);
 
     for T = 1:size(elements, 1)
