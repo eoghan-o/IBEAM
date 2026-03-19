@@ -1,4 +1,31 @@
-function f = build_rhs(elements, nodes, n_nodes, f_value)
+function f = build_rhs(elements, nodes, n_nodes, f_value, n_quad)
+    f = zeros(n_nodes,1);
+
+    for T = 1:size(elements,1)
+        indices = elements(T, :);
+        v = nodes(indices, :);
+
+        v1 = v([1 2 3], :);
+        v2 = v([1 3 4], :);
+
+        [qp1, w1] = triquad(v1, n_quad);
+        [qp2, w2] = triquad(v2, n_quad);
+        
+        quadratures = zeros(size(elements(T,:)',1),1);
+        for p = 1:n_quad^2
+            [phi1, ~] = wachspress2d(v, qp1(p,:));
+            [phi2, ~] = wachspress2d(v, qp2(p,:));
+            f1 = f_value(qp1(p,1), qp1(p,2));
+            f2 = f_value(qp2(p,1), qp2(p,2));
+
+            quadratures = quadratures + w1(p)*f1*phi1 + w2(p)*f2*phi2;
+        end
+        f(indices) = f(indices) + quadratures;
+    end
+    %f_old = build_rhs_old(elements, nodes, n_nodes, f_value);
+end
+
+function f = build_rhs_old(elements, nodes, n_nodes, f_value)
     f = zeros(n_nodes,1);
 
     for T = 1:size(elements,1)
