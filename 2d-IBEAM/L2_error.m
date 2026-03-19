@@ -19,9 +19,9 @@ function err = L2_error(u, u_true, elements, nodes, n_quad)
             u2_local = dot(u_local, phi2);
 
             u_true1 = u_true(qp1(p,1), qp1(p,2));
-            u_true2 = u_true(qp2(p,1), qp1(p,2));
+            u_true2 = u_true(qp2(p,1), qp2(p,2));
 
-            total = total + (w1(p)*(u1_local - u_true1) + w2(p)*(u2_local - u_true2))^2;
+            total = total + w1(p)*(u1_local - u_true1)^2 + w2(p)*(u2_local - u_true2)^2;
         end
     end
     err = sqrt(total);
