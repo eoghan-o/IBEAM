@@ -40,7 +40,7 @@ for idx = 1:num_plots
     k = k_values(idx);
     n = 2^k + 1;
     h = 1/(n-1);
-    perturb = 0*h;
+    perturb = 0;
     [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb);
 
     for a_idx = 1:length(a_values)
