@@ -30,7 +30,7 @@ b = [1; 2];
 k_values = 4:6;
 a_values = (1/10).^(2:3);
 
-nquad = 2;
+nquad = 3;
 
 num_plots = length(k_values);
 H1_ibeam_k = zeros(length(k_values),length(a_values));
@@ -196,8 +196,9 @@ end
 function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
     n = 2^k + 1;
     %f = zeros(n_nodes,1);
-    f = build_rhs(elements, nodes, n_nodes, f_value, nquad);
-
+    [f, f_old] = build_rhs(elements, nodes, n_nodes, f_value, nquad);
+    norm(f - f_old)
+    
     A = sparse(n_nodes, n_nodes);
     A_old = sparse(n_nodes, n_nodes);
 
@@ -246,10 +247,23 @@ function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
     A_IB = A(interior, bdy_nodes);
     f_I = f(interior);
 
+    A_II_old = A_old(interior, interior);
+    A_IB_old = A(interior, bdy_nodes);
+    f_I_old = f_old(interior);
+
     rhs_reduced = f_I - A_IB * g;
     u_I = A_II \ rhs_reduced;
+
+    rhs_reduced_old = f_I_old - A_IB_old * g;
+    u_I_old = A_II_old \ rhs_reduced_old;
 
     u_ibeam = zeros(n_nodes,1);
     u_ibeam(interior) = u_I;
     u_ibeam(bdy_nodes) = g;
+
+    u_ibeam_old = zeros(n_nodes,1);
+    u_ibeam_old(interior) = u_I_old;
+    u_ibeam_old(bdy_nodes) = g;
+
+    norm(u_ibeam - u_ibeam_old)
 end
