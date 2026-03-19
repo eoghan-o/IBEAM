@@ -1,5 +1,5 @@
 close all;
-
+% 
 % [elements, nodes, n_nodes] = generate_perturbed_mesh(2,0);
 % indices = elements(1, :);
 % v = nodes(indices, :);
@@ -9,39 +9,28 @@ close all;
 % 
 % t1 = v([1 2 3], :);
 % t2 = v([1 3 4], :);
+% result = zeros(6,1);
 % 
-% [qp1, w1] = tri_gauss3(t1);
-% [qp2, w2] = tri_gauss3(t2);
+% for n = 2:7
+%     [qp1, w1] = triquad(n, t1);
+%     [qp2, w2] = triquad(n, t2);
 % 
-% I1 = 0;
-% I2 = 0;
-% for k = 1:3
-%     [phi1, dphi1] = wachspress2d(v, qp1(k,:));
-%     [phi2, dphi2] = wachspress2d(v, qp2(k,:));
+%     I1 = 0; I2 = 0;
+%     for k = 1:n^2
+%         [phi1, dphi1] = wachspress2d(v, qp1(k,:));
+%         [phi2, dphi2] = wachspress2d(v, qp2(k,:));
 % 
-%     I1 = I1 + w1(k)*dot(dphi1(i,:),dphi1(j,:));
-%     I2 = I2 + w2(k)*dot(dphi2(i,:),dphi2(j,:));
+%         I1 = I1 + w1(k)*dot(dphi1(i,:), dphi1(j,:));
+%         I2 = I2 + w2(k)*dot(dphi2(i,:), dphi2(j,:));
+%     end
+%     result(n-1) = I1 + I2;
 % end
-% I = I1 + I2;
-% 
-% [qp1, w1] = tri_gauss9(t1);
-% [qp2, w2] = tri_gauss9(t2);
-% 
-% I1 = 0;
-% I2 = 0;
-% for k = 1:9
-%     [phi1, dphi1] = wachspress2d(v, qp1(k,:));
-%     [phi2, dphi2] = wachspress2d(v, qp2(k,:));
-% 
-%     I1 = I1 + w1(k)*dot(dphi1(i,:),dphi1(j,:));
-%     I2 = I2 + w2(k)*dot(dphi2(i,:),dphi2(j,:));
-% end
-% I9 = I1 + I2;
 
 b = [1; 2];
-f_value = @(x,y) 1 + (x-x);
 k_values = 4:6;
-a_values = (1/10).^(1:2);
+a_values = (1/10).^(2:3);
+
+nquad = 2;
 
 num_plots = length(k_values);
 H1_ibeam_k = zeros(length(k_values),length(a_values));
@@ -56,10 +45,20 @@ for idx = 1:num_plots
 
     for a_idx = 1:length(a_values)
         a = a_values(a_idx);
-        f_value = @(x,y) (x-x) + 0; %@(x,y) 0 + a*2*sin(x+y) - (b(1) + b(2)) * cos(x + y);
-        [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes);
-        H1_ibeam_k(idx,a_idx) = H1_error(u_ibeam,elements,nodes);
-        L2_ibeam_k(idx,a_idx) = L2_error(u_ibeam,elements,nodes);
+        %f_value = @(x,y) (x-x) + 1; 
+        f_value = @(x,y) 0 + a*2*sin(x+y) - (b(1) + b(2)) * cos(x + y);
+        [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad);
+
+        [X,Y] = meshgrid(linspace(0,1,n));
+        figure('Name', sprintf('Graph of Solution: n=%d, alpha=%.3f', n, a))
+        surf(X,Y, reshape(u_ibeam, n, n)); hold on
+        xlabel('x'); ylabel('y'); zlabel('u(x,y)');
+        axis square
+        grid on
+        title(sprintf('Solution for n = %d, \\alpha = %.3f', n, a))
+        
+        % H1_ibeam_k(idx,a_idx) = H1_error(u_ibeam,elements,nodes);
+        % L2_ibeam_k(idx,a_idx) = L2_error(u_ibeam,elements,nodes);
     end
 end
 [X, Y] = meshgrid(linspace(0, 1, n));
@@ -71,24 +70,25 @@ xlabel('x'); ylabel('y'); zlabel('u(x,y)');
 axis square
 grid on
 
-h_values = 1 ./ (2.^k_values);
-C1 = L2_ibeam_k(1,1) / h_values(1);
-C2 = L2_ibeam_k(1,1) / h_values(1)^2;
+% h_values = 1 ./ (2.^k_values);
+% C1 = L2_ibeam_k(1,1) / h_values(1);
+% C2 = L2_ibeam_k(1,1) / h_values(1)^2;
 
-figure('Name', 'L^2 norm error')
-loglog(h_values, L2_ibeam_k(:,1), 'LineWidth', 1.5); hold on
-loglog(h_values, L2_ibeam_k(:,2), 'LineWidth', 1.5)
-loglog(h_values, L2_ibeam_k(:,3), 'LineWidth', 1.5)
-loglog(h_values, L2_ibeam_k(:,4), 'LineWidth', 1.5)
-loglog(h_values, C1*h_values, '--k', 'LineWidth', 1.2)
-loglog(h_values, C2*h_values.^2, '--r', 'LineWidth', 1.2)
-xlabel('h'); ylabel('error'); title('L^2 norm error')
-legend('\alpha = 0.1', '\alpha = 0.01', '\alpha = 1E-3', '\alpha = 1E-4', 'O(h)', 'O(h^2)', 'Location', 'best'); grid on
+% figure('Name', 'L^2 norm error')
+% loglog(h_values, L2_ibeam_k(:,1), 'LineWidth', 1.5); hold on
+% loglog(h_values, L2_ibeam_k(:,2), 'LineWidth', 1.5)
+% loglog(h_values, L2_ibeam_k(:,3), 'LineWidth', 1.5)
+% loglog(h_values, L2_ibeam_k(:,4), 'LineWidth', 1.5)
+% loglog(h_values, C1*h_values, '--k', 'LineWidth', 1.2)
+% loglog(h_values, C2*h_values.^2, '--r', 'LineWidth', 1.2)
+% xlabel('h'); ylabel('error'); title('L^2 norm error')
+% legend('\alpha = 0.1', '\alpha = 0.01', '\alpha = 1E-3', '\alpha = 1E-4', 'O(h)', 'O(h^2)', 'Location', 'best'); grid on
 
 function value = true_solution(a, x, y)
     %value = x.*(1 - exp((y-1)./a))./(1-exp(-2/a));
-    value = 0;
-    %value = sin(x+y);
+    %value = 0;
+    %value = 1;
+    value = sin(x + y);
 end
 
 function err = L2_error(u,elements,nodes)
@@ -193,19 +193,19 @@ function B = bernoulli(p)
     end
 end
 
-function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes)
+function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
     n = 2^k + 1;
     %f = zeros(n_nodes,1);
-    f = build_rhs(elements, nodes, n_nodes, f_value);
+    f = build_rhs(elements, nodes, n_nodes, f_value, nquad);
 
     A = sparse(n_nodes, n_nodes);
+    A_old = sparse(n_nodes, n_nodes);
 
     %G_T = [-1 1 0 0; -1 0 1 0; 0 -1 0 1; 0 0 -1 1; -1 0 0 1; 0 -1 1 0];
     G_T = [-1 1 0 0; 0 -1 1 0; 0 0 -1 1; 1 0 0 -1; -1 0 1 0; 0 -1 0 1];
     local_edge = [2 1; 3 2; 4 3; 1 4; 3 1; 2 4];
-    %w = [1/6 1/6 1/6 1/6 1/3 1/3]';
-    w = [0.42 0.42 0.42 0.42 0.31 0.31];
-    W = diag(w);
+    w_old = [1/6 1/6 1/6 1/6 1/3 1/3]';
+    W_old = diag(w_old);
 
     for T = 1:size(elements, 1)
         indices = elements(T, :);
@@ -217,11 +217,16 @@ function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes)
             Gb_T(e,local_edge(e,1)) = bernoulli(-p_e);
             Gb_T(e,local_edge(e,2)) = -bernoulli(p_e);
         end
-
-        % w = compute_W(vertices, quad_pts, quad_w);
+        
+        W = assemble_weight_matrix(vertices, nquad);
         A_T = a*G_T'*W*Gb_T;
+        A_T_old = a*G_T'*W_old*Gb_T;
         A(indices, indices) = A(indices, indices) + A_T;
+        A_old(indices, indices) = A_old(indices, indices) + A_T_old;
     end
+    % norm(f - f_old)
+    % A_diff = full(A - A_old);
+    % norm(A_diff)
 
     tol = 1e-12;
     bdy_nodes = find(...
