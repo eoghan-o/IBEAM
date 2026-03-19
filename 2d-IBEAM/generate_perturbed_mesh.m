@@ -1,13 +1,14 @@
 function [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb)
     [X,Y] = meshgrid(linspace(0,1,n));
+    h = 1/(n-1);
     X = X'; Y = Y';
     nodes = [X(:), Y(:)];
 
     for j = 2:n-1
         for i = 2:n-1
             idx = i + (j-1)*n;
-            nodes(idx, 1) = nodes(idx, 1) + (rand - 0.5)*perturb;
-            nodes(idx, 2) = nodes(idx, 2) + (rand - 0.5)*perturb;
+            nodes(idx, 1) = nodes(idx, 1) + (rand - 0.5)*perturb*h;
+            nodes(idx, 2) = nodes(idx, 2) + (rand - 0.5)*perturb*h;
         end
     end
     n_nodes = size(nodes,1);
