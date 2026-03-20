@@ -1,14 +1,13 @@
-function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
+function [u_ibeam, A_II] = ibeam(k, a, b, f_value, u_true, elements, nodes, n_nodes, nquad)
     n = 2^k + 1;
     %f = zeros(n_nodes,1);
     [f, f_old] = build_rhs(elements, nodes, n_nodes, f_value, nquad);
-    
     A = sparse(n_nodes, n_nodes);
     A_old = sparse(n_nodes, n_nodes);
 
     %G_T = [-1 1 0 0; -1 0 1 0; 0 -1 0 1; 0 0 -1 1; -1 0 0 1; 0 -1 1 0];
     G_T = [-1 1 0 0; 0 -1 1 0; 0 0 -1 1; 1 0 0 -1; -1 0 1 0; 0 -1 0 1];
-    local_edge = [2 1; 3 2; 4 3; 1 4; 3 1; 2 4];
+    local_edge = [2 1; 3 2; 4 3; 1 4; 3 1; 4 2];
     w_old = [1/6 1/6 1/6 1/6 1/3 1/3]';
     W_old = diag(w_old);
 
@@ -44,7 +43,7 @@ function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
         idx = bdy_nodes(k);
         x = nodes(idx, 1);
         y = nodes(idx, 2);
-        g(k) = true_solution(a, x, y);
+        g(k) = u_true(x, y);
     end
 
     A_II = A(interior, interior);
@@ -52,7 +51,7 @@ function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
     f_I = f(interior);
 
     A_II_old = A_old(interior, interior);
-    A_IB_old = A(interior, bdy_nodes);
+    A_IB_old = A_old(interior, bdy_nodes);
     f_I_old = f_old(interior);
 
     rhs_reduced = f_I - A_IB * g;
@@ -68,4 +67,12 @@ function [u_ibeam, A] = ibeam(k, a, b, f_value, elements, nodes, n_nodes, nquad)
     u_ibeam_old = zeros(n_nodes,1);
     u_ibeam_old(interior) = u_I_old;
     u_ibeam_old(bdy_nodes) = g;
+end
+
+function B = bernoulli(p)
+    if abs(p) < 10^(-8)
+        B = 1 - p/2 + p^2;
+    else
+        B = p/(exp(p) - 1);
+    end
 end
