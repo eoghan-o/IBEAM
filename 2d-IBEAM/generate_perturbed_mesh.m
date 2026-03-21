@@ -3,7 +3,6 @@ function [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb)
     h = 1/(n-1);
     X = X'; Y = Y';
     nodes = [X(:), Y(:)];
-
     for j = 2:n-1
         for i = 2:n-1
             idx = i + (j-1)*n;
@@ -12,9 +11,8 @@ function [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb)
         end
     end
     n_nodes = size(nodes,1);
-    
     n_elements = (n-1)^2;
-    elements = zeros(n_elements,4);
+    elements = cell(n_elements, 1);
     e = 1;
     for j = 1:n-1
         for i = 1:n-1
@@ -22,7 +20,7 @@ function [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb)
             n2 = i + 1 + (j-1)*n;
             n3 = i + 1 + j*n;
             n4 = i + j*n;
-            elements(e,:) = [n1 n2 n3 n4];
+            elements{e} = [n1 n2 n3 n4];
             e = e + 1;
         end
     end

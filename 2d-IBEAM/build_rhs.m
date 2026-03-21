@@ -1,9 +1,8 @@
 function f = build_rhs(elements, nodes, n_nodes, f_value, n_quad)
     f = zeros(n_nodes,1);
-
     for T = 1:size(elements,1)
-        indices = elements(T,:);
-        v = nodes(indices,:);
+        indices = elements{T};
+        v = nodes(indices, :);
     
         integrand = @(qp) wachspress2d(v, qp) * f_value(qp(1), qp(2));
         % Note: wachspress2d must return phi as a column vector here

@@ -1,3 +1,4 @@
+addpath('PolyMesher')
 close all;
 
 b = [0; 1];
@@ -77,64 +78,3 @@ loglog(h_values, C1*h_values, '--k', 'LineWidth', 1.2)
 loglog(h_values, C2*h_values.^2, '--r', 'LineWidth', 1.2)
 xlabel('h'); ylabel('error'); title('H^1 Semi-norm Error')
 legend('\alpha = 0.1', '\alpha = 0.01', '\alpha = 1E-3', '\alpha = 1E-4', 'O(h)', 'O(h^2)', 'Location', 'best'); grid on
-
-% function err = H1_error(u,elements,nodes)
-%     total = 0;
-%     for T = 1:size(elements,1)
-%         indices = elements(T, :);
-%         vertices = nodes(indices, :);
-%         u_local = u(indices);
-% 
-%         x_coords = vertices(:,1);
-%         y_coords = vertices(:,2);
-% 
-%         x1 = min(x_coords);
-%         x2 = max(x_coords);
-%         y1 = min(y_coords);
-%         y2 = max(y_coords);
-% 
-%         phi1 = @(x,y) ((x-x2).*(y-y2))./((x1-x2).*(y1-y2));
-%         phi2 = @(x,y) ((x-x1).*(y-y2))./((x2-x1).*(y1-y2));
-%         phi3 = @(x,y) ((x-x2).*(y-y1))./((x1-x2).*(y2-y1));
-%         phi4 = @(x,y) ((x-x1).*(y-y1))./((x2-x1).*(y2-y1));
-% 
-%         phi1_x = @(x,y) (y-y2)./((x1-x2).*(y1-y2));
-%         phi1_y = @(x,y) (x-x2)./((x1-x2).*(y1-y2));
-%         phi2_x = @(x,y) (y-y2)./((x2-x1).*(y1-y2));
-%         phi2_y = @(x,y) (x-x1)./((x2-x1).*(y1-y2));
-%         phi3_x = @(x,y) (y-y1)./((x1-x2).*(y2-y1));
-%         phi3_y = @(x,y) (x-x2)./((x1-x2).*(y2-y1));
-%         phi4_x = @(x,y) (y-y1)./((x2-x1).*(y2-y1));
-%         phi4_y = @(x,y) (x-x1)./((x2-x1).*(y2-y1));
-% 
-%         uh = @(x,y) u_local(1)*phi1(x,y) + ...
-%             u_local(2)*phi2(x,y) + ...
-%             u_local(3)*phi3(x,y) + ...
-%             u_local(4)*phi4(x,y);
-% 
-%         grad_uh_x = @(x,y) u_local(1)*phi1_x(x,y) + ...
-%             u_local(2)*phi2_x(x,y) + ...
-%             u_local(3)*phi3_x(x,y) + ...
-%             u_local(4)*phi4_x(x,y);
-% 
-%         grad_uh_y = @(x,y) u_local(1)*phi1_y(x,y) + ...
-%             u_local(2)*phi2_y(x,y) + ...
-%             u_local(3)*phi3_y(x,y) + ...
-%             u_local(4)*phi4_y(x,y);
-% 
-%         u_true = @(x,y) sin(x + y);
-%         grad_u_x = @(x,y) cos(x+y);
-%         grad_u_y = @(x,y) cos(x+y);
-% 
-%         % u_true = @(x,y) (x-x) + 0;
-%         % grad_u_x = @(x,y) (x-x) + 0;
-%         % grad_u_y = @(x,y) (x-x) + 0;
-% 
-%         integrand = @(x,y) (uh(x,y) - u_true(x,y)).^2 + ...
-%             (grad_uh_x(x,y) - grad_u_x(x,y)).^2 + ...
-%             (grad_uh_y(x,y) - grad_u_y(x,y)).^2;
-% 
-%         total = total + integral2(integrand, x1, x2, y1, y2);
-%     end
-%     err = sqrt(total);
-% end
