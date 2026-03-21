@@ -4,10 +4,9 @@ close all;
 % Parameters
 b          = [0; 1];
 k_values   = 3:7;
-a_values   = (1/10).^(1:4);
+a_values   = (1/10).^(0:2);
 nquad      = 3;
 use_poly   = true; %false;   % true: PolyMesher, false: structured quad mesh
-n_elements = 100;     % only used if use_poly = true
 
 % Exact solution
 u_true = @(x,y) sin(pi*x).*sin(pi*y);
@@ -17,15 +16,18 @@ u_y    = @(x,y) pi*cos(pi*y).*sin(pi*x);
 % Error storage
 H1_err = zeros(length(k_values), length(a_values));
 L2_err = zeros(length(k_values), length(a_values));
-
+h_values = zeros(length(k_values), 1);
 for idx = 1:length(k_values)
     k = k_values(idx);
-
+    
     if use_poly
+        n_elements = (2^k - 1)^2;
         [elements, nodes, n_nodes] = generate_mesh(n_elements);
+        h_values(idx) = 1 / sqrt(n_elements);
     else
         n = 2^k + 1;
         [elements, nodes, n_nodes] = generate_perturbed_mesh(n, 0);
+        h_values(idx) = 1 / (n - 1);
     end
 
     for a_idx = 1:length(a_values)
@@ -50,10 +52,21 @@ if ~use_poly
     xlabel('x'); ylabel('y'); zlabel('u(x,y)');
     axis square; grid on
     title('Solution')
+else
+    % Unstructured mesh
+    figure('Name', 'Graph of Solution')
+    patch('Faces', cell2mat(cellfun(@(e) [e, nan(1, max(cellfun(@length, elements)) - length(e))], elements, 'UniformOutput', false)), ...
+          'Vertices', nodes, ...
+          'FaceVertexCData', u_ibeam, ...
+          'FaceColor', 'interp', ...
+          'EdgeColor', 'k');
+    colorbar
+    xlabel('x'); ylabel('y');
+    axis square; grid on
+    title('Solution')
 end
 
 % Convergence plots
-h_values = 1 ./ (2.^k_values);
 plot_convergence(h_values, L2_err, 'L^2 Norm Error', a_values);
 plot_convergence(h_values, H1_err, 'H^1 Semi-norm Error', a_values);
 

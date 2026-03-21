@@ -1,0 +1,83 @@
+function [elements, nodes, n_nodes] = generate_mesh(n_elements)
+    warning('off', 'all');
+    fig_handles = get(0, 'Children');
+    [nodes, elements] = evalc(PolyMesher(@square_domain, n_elements, 100);
+    close(setdiff(get(0, 'Children'), fig_handles));
+    warning('on', 'all');
+    nodes = max(0, min(1, nodes));
+    
+    min_edge_tol = 1e-3;
+    n_nodes_orig = size(nodes, 1);
+    
+    % Build merge map: if edge is short, map higher index to lower index
+    merge_map = 1:n_nodes_orig;
+    for T = 1:length(elements)
+        idx = elements{T};
+        n_v = length(idx);
+        for i = 1:n_v
+            j = mod(i, n_v) + 1;
+            a = idx(i);
+            b = idx(j);
+            if norm(nodes(a,:) - nodes(b,:)) < min_edge_tol
+                % Map the higher index to the lower index, following chain
+                root_a = find_root(merge_map, a);
+                root_b = find_root(merge_map, b);
+                if root_a ~= root_b
+                    merge_map(max(root_a, root_b)) = min(root_a, root_b);
+                end
+            end
+        end
+    end
+    
+    % Flatten merge map (follow chains to root)
+    for i = 1:n_nodes_orig
+        merge_map(i) = find_root(merge_map, i);
+    end
+    
+    % Reindex to consecutive integers
+    [~, ~, new_idx] = unique(merge_map);
+    nodes = nodes(unique(merge_map, 'stable'), :);
+    
+    % Update elements
+    for T = 1:length(elements)
+        elements{T} = new_idx(elements{T})';
+        elements{T} = unique(elements{T}, 'stable');
+    end
+    
+    % Remove degenerate elements
+    elements = elements(cellfun(@length, elements) >= 3);
+    
+    % Enforce CCW orientation
+    for T = 1:length(elements)
+        idx = elements{T};
+        v = nodes(idx,:);
+        n_v = size(v,1);
+        area = 0;
+        for i = 1:n_v
+            j = mod(i, n_v) + 1;
+            area = area + v(i,1)*v(j,2) - v(j,1)*v(i,2);
+        end
+        if area < 0
+            elements{T} = fliplr(idx);
+        end
+    end
+    
+    n_nodes = size(nodes, 1);
+end
+
+function root = find_root(merge_map, i)
+    while merge_map(i) ~= i
+        i = merge_map(i);
+    end
+    root = i;
+end
+
+function x = square_domain(Demand, Arg)
+    BdBox = [0 1 0 1];
+    switch Demand
+        case 'Dist';  x = dRectangle(Arg, BdBox(1), BdBox(2), BdBox(3), BdBox(4));
+        case 'BC';    x = {[], []};
+        case 'BdBox'; x = BdBox;
+        case 'PFix';  x = [];
+    end
+end
