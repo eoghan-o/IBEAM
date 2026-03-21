@@ -1,32 +1,53 @@
-function [u_ibeam, A_II] = ibeam(k, a, b, f_value, u_true, elements, nodes, n_nodes, nquad)
-    n = 2^k + 1;
-    %f = zeros(n_nodes,1);
-    [f, f_old] = build_rhs(elements, nodes, n_nodes, f_value, nquad);
+function [u_ibeam, A_II] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad)
+    f = build_rhs(elements, nodes, n_nodes, f_value, nquad);
     A = sparse(n_nodes, n_nodes);
-    A_old = sparse(n_nodes, n_nodes);
-
-    %G_T = [-1 1 0 0; -1 0 1 0; 0 -1 0 1; 0 0 -1 1; -1 0 0 1; 0 -1 1 0];
-    G_T = [-1 1 0 0; 0 -1 1 0; 0 0 -1 1; 1 0 0 -1; -1 0 1 0; 0 -1 0 1];
-    local_edge = [2 1; 3 2; 4 3; 1 4; 3 1; 4 2];
-    w_old = [1/6 1/6 1/6 1/6 1/3 1/3]';
-    W_old = diag(w_old);
 
     for T = 1:size(elements, 1)
         indices = elements(T, :);
         vertices = nodes(indices, :);
-        Gb_T = zeros(6,4);
-        for e = 1:6
-            e_vec = (vertices(local_edge(e,1),:)-vertices(local_edge(e,2),:))';
-            p_e = a^(-1)* b'*(e_vec);
-            Gb_T(e,local_edge(e,1)) = bernoulli(-p_e);
-            Gb_T(e,local_edge(e,2)) = -bernoulli(p_e);
+        n_v = size(vertices, 1);
+
+        % Build edge list: real edges (ccw) then fake edges (toward larger index)
+        real_edges = [(1:n_v)', [2:n_v, 1]'];
+        n_fake = nchoosek(n_v, 2) - n_v;
+        fake_edges = zeros(n_fake, 2);
+        idx = 1;
+        for i = 1:n_v
+            for j = i+2:n_v
+                if ~(i == 1 && j == n_v)
+                    fake_edges(idx,:) = [i j];
+                    idx = idx + 1;
+                end
+            end
         end
-        
-        W = assemble_weight_matrix(vertices, nquad);
-        A_T = a*G_T'*W*Gb_T;
-        A_T_old = a*G_T'*W_old*Gb_T;
+        local_edge = [real_edges; fake_edges];
+        n_edges = size(local_edge, 1);
+
+        % Build G_T: incidence matrix (n_edges x n_v)
+        G_T = zeros(n_edges, n_v);
+        for e = 1:n_v
+            G_T(e, local_edge(e,1)) = -1;
+            G_T(e, local_edge(e,2)) = 1;
+        end
+        for e = n_v+1:n_edges
+            G_T(e, local_edge(e,1)) = -1;
+            G_T(e, local_edge(e,2)) = 1;
+        end
+
+        % Build Gb_T: Bernoulli-weighted incidence (n_edges x n_v)
+        Gb_T = zeros(n_edges, n_v);
+        for e = 1:n_edges
+            i = local_edge(e,1);
+            j = local_edge(e,2);
+            e_vec = (vertices(j,:) - vertices(i,:))';  % tau: always i -> j
+            p_e = a^(-1) * b' * e_vec;
+            Gb_T(e, i) = -bernoulli( p_e);
+            Gb_T(e, j) =  bernoulli(-p_e);
+        end
+
+        W = assemble_weight_matrix(vertices, local_edge, nquad);
+        A_T = a * G_T' * W * Gb_T;
         A(indices, indices) = A(indices, indices) + A_T;
-        A_old(indices, indices) = A_old(indices, indices) + A_T_old;
     end
     % norm(f - f_old)
     % A_diff = full(A - A_old);
@@ -50,23 +71,12 @@ function [u_ibeam, A_II] = ibeam(k, a, b, f_value, u_true, elements, nodes, n_no
     A_IB = A(interior, bdy_nodes);
     f_I = f(interior);
 
-    A_II_old = A_old(interior, interior);
-    A_IB_old = A_old(interior, bdy_nodes);
-    f_I_old = f_old(interior);
-
     rhs_reduced = f_I - A_IB * g;
     u_I = A_II \ rhs_reduced;
-
-    rhs_reduced_old = f_I_old - A_IB_old * g;
-    u_I_old = A_II_old \ rhs_reduced_old;
 
     u_ibeam = zeros(n_nodes,1);
     u_ibeam(interior) = u_I;
     u_ibeam(bdy_nodes) = g;
-
-    u_ibeam_old = zeros(n_nodes,1);
-    u_ibeam_old(interior) = u_I_old;
-    u_ibeam_old(bdy_nodes) = g;
 end
 
 function B = bernoulli(p)

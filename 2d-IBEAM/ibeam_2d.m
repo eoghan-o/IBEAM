@@ -1,7 +1,7 @@
 close all;
 
 b = [0; 1];
-k_values = 3:9;
+k_values = 3:7;
 a_values = (1/10).^(1:4);
 
 nquad = 3;
@@ -14,7 +14,7 @@ for idx = 1:num_plots
     k = k_values(idx);
     n = 2^k + 1;
     h = 1/(n-1);
-    perturb = 0.3;
+    perturb = 0;
     [elements, nodes, n_nodes] = generate_perturbed_mesh(n, perturb);
 
     for a_idx = 1:length(a_values)
@@ -28,7 +28,7 @@ for idx = 1:num_plots
         u_x = @(x,y) 0 + pi*cos(pi*x)*sin(pi*y);
         u_y = @(x,y) 0 + pi*cos(pi*y)*sin(pi*x);
 
-        [u_ibeam, A] = ibeam(k, a, b, f_value, u_true, elements, nodes, n_nodes, nquad);
+        [u_ibeam, A] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad);
 
         % [X,Y] = meshgrid(linspace(0,1,n));
         % figure('Name', sprintf('Graph of Solution: n=%d, alpha=%.3f', n, a))

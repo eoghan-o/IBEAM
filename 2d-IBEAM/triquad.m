@@ -1,18 +1,18 @@
-function [qp,qw] = triquad(v,n)
-    if(n<1)
-        n = 1;
+function [qp,qw] = triquad(v,n_quad)
+    if(n_quad<1)
+        n_quad = 1;
         disp("HEY!  You better have at least 1 quadrature point...\n")
         disp("Forcing you to use 1 quadrature point.\n\n")
-    elseif(n>7)
-        n = 7;
+    elseif(n_quad>7)
+        n_quad = 7;
         disp("Getting greedy with the quadrature aren't we??\n  Knocking you down to 7x7 quadrature points...\n")
     end
 
-    ngauss = n*n;
+    ngauss = n_quad*n_quad;
     qp = zeros(2*ngauss,1);
     qw = zeros(ngauss,1);
 
-    switch (n)
+    switch (n_quad)
         case 1
             qp(1)=   0.3333333333333333333333333E+00;
             qp(ngauss+1)=   0.3333333333333333333333333E+00;
