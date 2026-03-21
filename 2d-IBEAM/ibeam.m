@@ -1,8 +1,13 @@
-function [u_ibeam, A_II] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad)
+
+function [u_ibeam, A_II] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad, use_poly)
     f = build_rhs(elements, nodes, n_nodes, f_value, nquad);
     A = assemble_stiffness(a, b, elements, nodes, n_nodes, nquad);
 
-    [interior, bdy_nodes, g] = classify_nodes(nodes, n_nodes, u_true);
+    if use_poly
+        [interior, bdy_nodes, g] = classify_nodes_polymesher(nodes, n_nodes, u_true);
+    else
+        [interior, bdy_nodes, g] = classify_nodes(nodes, n_nodes, u_true);
+    end
 
     A_II = A(interior, interior);
     A_IB = A(interior, bdy_nodes);
@@ -30,6 +35,11 @@ function A = assemble_stiffness(a, b, elements, nodes, n_nodes, nquad)
         W    = assemble_weight_matrix(vertices, local_edge, nquad);
 
         A_T = a * G_T' * W * Gb_T;
+        if any(any(isnan(A_T))) || any(any(isinf(A_T)))
+            fprintf('Bad element %d, n_v=%d, skipping\n', T, n_v);
+            continue
+        end
+
         A(indices, indices) = A(indices, indices) + A_T;
     end
 end
@@ -72,10 +82,19 @@ function Gb_T = build_Gb(local_edge, n_edges, vertices, a, b)
 end
 
 function [interior, bdy_nodes, g] = classify_nodes(nodes, n_nodes, u_true)
-    tol      = 1e-12;
+    tol      = 1e-6;
     bdy_nodes = find( ...
         abs(nodes(:,1)) < tol | abs(nodes(:,1) - 1) < tol | ...
         abs(nodes(:,2)) < tol | abs(nodes(:,2) - 1) < tol);
+    interior = setdiff(1:n_nodes, bdy_nodes);
+    g = arrayfun(@(k) u_true(nodes(k,1), nodes(k,2)), bdy_nodes);
+end
+
+function [interior, bdy_nodes, g] = classify_nodes_polymesher(nodes, n_nodes, u_true)
+    tol = 1e-3;
+    bdy_nodes = find( ...
+        nodes(:,1) < tol | nodes(:,1) > 1-tol | ...
+        nodes(:,2) < tol | nodes(:,2) > 1-tol);
     interior = setdiff(1:n_nodes, bdy_nodes);
     g = arrayfun(@(k) u_true(nodes(k,1), nodes(k,2)), bdy_nodes);
 end

@@ -3,7 +3,7 @@ close all;
 
 % Parameters
 b          = [0; 1];
-k_values   = 3:7;
+k_values   = 3:9;
 a_values   = (1/10).^(0:2);
 nquad      = 3;
 use_poly   = true; %false;   % true: PolyMesher, false: structured quad mesh
@@ -21,9 +21,8 @@ for idx = 1:length(k_values)
     k = k_values(idx);
     
     if use_poly
-        n_elements = (2^k - 1)^2;
-        [elements, nodes, n_nodes] = generate_mesh(n_elements);
-        h_values(idx) = 1 / sqrt(n_elements);
+        n_elements = 2^k;
+        [elements, nodes, n_nodes, h_values(idx)] = generate_mesh(n_elements);
     else
         n = 2^k + 1;
         [elements, nodes, n_nodes] = generate_perturbed_mesh(n, 0);
@@ -36,7 +35,7 @@ for idx = 1:length(k_values)
         f_value = @(x,y) 2*a*pi^2*sin(pi*x).*sin(pi*y) - ...
             pi*(b(1)*cos(pi*x).*sin(pi*y) + b(2)*sin(pi*x).*cos(pi*y));
 
-        [u_ibeam, ~] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad);
+        [u_ibeam, ~] = ibeam(a, b, f_value, u_true, elements, nodes, n_nodes, nquad, use_poly);
 
         H1_err(idx, a_idx) = H1_semi_error(u_ibeam, u_x, u_y, elements, nodes, nquad);
         L2_err(idx, a_idx) = L2_error(u_ibeam, u_true, elements, nodes, nquad);
