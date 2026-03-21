@@ -1,4 +1,4 @@
-function f = build_rhs(elements, nodes, n_nodes, f_value, n_quad)
+function [f, f_old] = build_rhs(elements, nodes, n_nodes, f_value, n_quad)
     f = zeros(n_nodes,1);
 
     for T = 1:size(elements,1)
@@ -22,7 +22,7 @@ function f = build_rhs(elements, nodes, n_nodes, f_value, n_quad)
         end
         f(indices) = f(indices) + quadratures;
     end
-    %f_old = build_rhs_old(elements, nodes, n_nodes, f_value);
+    f_old = build_rhs_old(elements, nodes, n_nodes, f_value);
 end
 
 function f = build_rhs_old(elements, nodes, n_nodes, f_value)

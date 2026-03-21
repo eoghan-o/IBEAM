@@ -1,6 +1,4 @@
-function [outputArg1,outputArg2] = L2_error(u, u_true, elements, nodes, n_quad)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+function err = L2_error(u, u_true, elements, nodes, n_quad)
     total = 0;
     for T = 1:size(elements,1)
         indices = elements(T, :);
@@ -17,8 +15,14 @@ function [outputArg1,outputArg2] = L2_error(u, u_true, elements, nodes, n_quad)
             [phi1, ~] = wachspress2d(v, qp1(p,:));
             [phi2, ~] = wachspress2d(v, qp2(p,:));
 
-            u1_local = u1 .* phi1;
-        end
+            u1_local = dot(u_local, phi1);
+            u2_local = dot(u_local, phi2);
 
+            u_true1 = u_true(qp1(p,1), qp1(p,2));
+            u_true2 = u_true(qp2(p,1), qp2(p,2));
+
+            total = total + w1(p)*(u1_local - u_true1)^2 + w2(p)*(u2_local - u_true2)^2;
+        end
     end
+    err = sqrt(total);
 end
