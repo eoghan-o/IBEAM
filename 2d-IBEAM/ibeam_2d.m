@@ -1,10 +1,18 @@
 addpath('PolyMesher')
 close all;
+set(groot, 'defaultFigureColor', 'white', ...
+           'defaultAxesColor', 'white', ...
+           'defaultTextColor', 'black', ...
+           'defaultAxesGridColor', [0.15 0.15 0.15], ...
+           'defaultAxesXColor', 'black', ...
+           'defaultAxesYColor', 'black')
+set(groot, 'defaultLegendColor', 'white', ...
+           'defaultLegendTextColor', 'black')
 
 % Parameters
 b          = [0; 1];
-k_values   = 3:9;
-a_values   = (1/10).^(0:2);
+k_values   = 14:16;
+a_values   = (1/10).^(0:4);
 nquad      = 3;
 use_poly   = true; %false;   % true: PolyMesher, false: structured quad mesh
 
@@ -43,27 +51,27 @@ for idx = 1:length(k_values)
 end
 
 % Plot solution (structured mesh only)
-if ~use_poly
-    n = 2^k_values(end) + 1;
-    [X, Y] = meshgrid(linspace(0, 1, n));
-    figure('Name', 'Graph of Solution')
-    surf(X, Y, reshape(u_ibeam, n, n));
-    xlabel('x'); ylabel('y'); zlabel('u(x,y)');
-    axis square; grid on
-    title('Solution')
-else
-    % Unstructured mesh
-    figure('Name', 'Graph of Solution')
-    patch('Faces', cell2mat(cellfun(@(e) [e, nan(1, max(cellfun(@length, elements)) - length(e))], elements, 'UniformOutput', false)), ...
-          'Vertices', nodes, ...
-          'FaceVertexCData', u_ibeam, ...
-          'FaceColor', 'interp', ...
-          'EdgeColor', 'k');
-    colorbar
-    xlabel('x'); ylabel('y');
-    axis square; grid on
-    title('Solution')
-end
+% if ~use_poly
+%     n = 2^k_values(end) + 1;
+%     [X, Y] = meshgrid(linspace(0, 1, n));
+%     figure('Name', 'Graph of Solution')
+%     surf(X, Y, reshape(u_ibeam, n, n));
+%     xlabel('x'); ylabel('y'); zlabel('u(x,y)');
+%     axis square; grid on
+%     title('Solution')
+% else
+%     % Unstructured mesh
+%     figure('Name', 'Graph of Solution')
+%     patch('Faces', cell2mat(cellfun(@(e) [e, nan(1, max(cellfun(@length, elements)) - length(e))], elements, 'UniformOutput', false)), ...
+%           'Vertices', nodes, ...
+%           'FaceVertexCData', u_ibeam, ...
+%           'FaceColor', 'interp', ...
+%           'EdgeColor', 'k');
+%     colorbar
+%     xlabel('x'); ylabel('y');
+%     axis square; grid on
+%     title('Solution')
+% end
 
 % Convergence plots
 plot_convergence(h_values, L2_err, 'L^2 Norm Error', a_values);

@@ -71,14 +71,33 @@ end
 function Gb_T = build_Gb(local_edge, n_edges, vertices, a, b)
     n_v  = size(vertices, 1);
     Gb_T = zeros(n_edges, n_v);
+    p_all = zeros(n_edges, 1);
     for e = 1:n_edges
         i     = local_edge(e,1);
         j     = local_edge(e,2);
         e_vec = (vertices(j,:) - vertices(i,:))';
         p_e   = a^(-1) * b' * e_vec;
+        p_all(e) = p_e;
         Gb_T(e, i) = -bernoulli( p_e);
         Gb_T(e, j) =  bernoulli(-p_e);
     end
+    % if rank(Gb_T) == n_v
+    %     fprintf('WARNING: rank(Gb_T) = %d = n_v (expected n_v-1 = %d)\n', n_v, n_v-1);
+    %     fprintf('  alpha = %.6e\n', a);
+    %     fprintf('  b     = [%.6e, %.6e]\n', b(1), b(2));
+    %     fprintf('  p_e per edge:\n');
+    %     for e = 1:n_edges
+    %         fprintf('    edge (%d,%d): p_e = %.6e\n', local_edge(e,1), local_edge(e,2), p_all(e));
+    %     end
+    %     sv = svd(Gb_T);
+    %     fprintf('  singular values of Gb_T:\n');
+    %     for k = 1:length(sv)
+    %         fprintf('    sv(%d) = %.6e\n', k, sv(k));
+    %     end
+    %     fprintf('  Gb_T =\n');
+    %     disp(Gb_T);
+    %     error('Halting: Gb_T has full column rank on this element.');
+    % end
 end
 
 function [interior, bdy_nodes, g] = classify_nodes(nodes, n_nodes, u_true)
