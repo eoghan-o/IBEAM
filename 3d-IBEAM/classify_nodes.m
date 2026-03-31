@@ -1,0 +1,9 @@
+function [interior, bdy_nodes, g] = classify_nodes(nodes, n_nodes, u_true)
+    tol = 1e-6;
+    bdy_nodes = find( ...
+        abs(nodes(:,1))       < tol | abs(nodes(:,1) - 1) < tol | ...
+        abs(nodes(:,2))       < tol | abs(nodes(:,2) - 1) < tol | ...
+        abs(nodes(:,3))       < tol | abs(nodes(:,3) - 1) < tol);
+    interior = setdiff(1:n_nodes, bdy_nodes);
+    g = arrayfun(@(k) u_true(nodes(k,1), nodes(k,2), nodes(k,3)), bdy_nodes);
+end
