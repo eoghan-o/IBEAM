@@ -1,6 +1,6 @@
 % Parameters
 b        = [0; 0; 1];
-k_values = 2:3;
+k_values = 2:5;
 a_values = (1/10).^(1:1);
 nquad    = 2;
 
