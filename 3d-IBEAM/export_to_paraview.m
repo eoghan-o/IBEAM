@@ -44,7 +44,7 @@ function export_to_paraview(nodes, elements, u_h, u_ex, filename)
 
     %% Cells (connectivity, offsets, types)
     % VTK uses 0-based indexing
-    conn = (elements - 1)';  % 4 x n_elems, 0-indexed
+    conn = (cell2mat(elements) - 1)';  % 4 x n_elems, 0-indexed  % 4 x n_elems, 0-indexed
 
     fprintf(fid, '      <Cells>\n');
 
