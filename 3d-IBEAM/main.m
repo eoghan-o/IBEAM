@@ -1,7 +1,7 @@
 % Parameters
 b        = [0; 0; 1];
-k_values = 2:5;
-a_values = (1/10).^(1:1);
+k_values = 2:7;
+a_values = (1/10).^(0:3);
 nquad    = 2;
 
 % Exact solution
