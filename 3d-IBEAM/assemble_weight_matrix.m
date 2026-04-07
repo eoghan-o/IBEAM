@@ -16,6 +16,9 @@ function W = assemble_weight_matrix(vertices, local_edge, g, un, nquad)
         j         = local_edge(e, 2);
         integrand = @(x) cross_grad(vertices, g, un, x, i, j);
         w_diag(e) = -polyintegrate3d(vertices, f_cell, nquad, integrand);
+        if abs(w_diag(e)) < 10^(-8)
+            w_diag(e) = 0;
+        end
     end
     W = diag(w_diag);
 end
