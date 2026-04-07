@@ -15,6 +15,12 @@ H1_err   = zeros(length(k_values), length(a_values));
 L2_err   = zeros(length(k_values), length(a_values));
 h_values = zeros(length(k_values), 1);
 
+%% Create output directory
+paraview_dir = fullfile(pwd, 'Paraview');
+if ~exist(paraview_dir, 'dir')
+    mkdir(paraview_dir);
+end
+
 for idx = 1:length(k_values)
     k = k_values(idx);
     h = 2^(-k);
@@ -39,7 +45,7 @@ for idx = 1:length(k_values)
         %% Export to ParaView
         u_ex_nodes = u_true(nodes(:,1), nodes(:,2), nodes(:,3));
         export_to_paraview(nodes, elements, u_h, u_ex_nodes, ...
-            sprintf('ibeam3d_k%d_a%g.vtu', k, a));
+            fullfile(paraview_dir, sprintf('ibeam3d_k%d_a%g.vtu', k, a)));
     end
 end
 
