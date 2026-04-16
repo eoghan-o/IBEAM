@@ -27,21 +27,18 @@ function [nodes, elements] = generate_mesh3d(h)
             end
         end
     end
-
-    % Build element list: split each cube into 6 tets
-    % Standard 6-tet decomposition of a unit cube with corners
+    
     % v1..v8 ordered as:
     %   v1=(i,j,k)   v2=(i+1,j,k)   v3=(i+1,j+1,k)  v4=(i,j+1,k)
     %   v5=(i,j,k+1) v6=(i+1,j,k+1) v7=(i+1,j+1,k+1) v8=(i,j+1,k+1)
-    %
+    
     % The 6 tets use the Kuhn/Freudenthal decomposition which is
-    % consistent across neighbouring cubes (no hanging nodes):
-    tet_local = [1 2 4 5;
-                 2 4 5 8;
-                 2 5 6 8;
-                 2 3 4 8;
-                 2 6 7 8;
-                 2 3 7 8];
+    tet_local = [1 2 3 7;
+             1 3 4 7;
+             1 4 8 7;
+             1 8 5 7;
+             1 5 6 7;
+             1 6 2 7];
 
     n_cubes   = n^3;
     elements  = cell(6 * n_cubes, 1);
