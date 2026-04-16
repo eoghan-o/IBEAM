@@ -8,12 +8,13 @@ function f = build_rhs(elements, nodes, n_nodes, f_value, nquad)
         n_v      = size(vertices, 1);
 
         local_face = build_face_list(vertices);
+
         [g, un]    = build_graph_and_normals(vertices, local_face);
 
-        % Build face cell array for polyintegrate3d
+        % Build face cell array for polyintegrate3d TET ONLY
         f_cell = cell(size(local_face, 1), 1);
         for ff = 1:size(local_face, 1)
-            f_cell{ff} = local_face(ff, :);
+           f_cell{ff} = local_face(ff, :);
         end
 
         % Integrate f_value * phi_i over the element for each local vertex i
