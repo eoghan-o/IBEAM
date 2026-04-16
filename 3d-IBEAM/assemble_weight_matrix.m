@@ -5,10 +5,12 @@ function W = assemble_weight_matrix(vertices, local_edge, g, un, nquad)
     w_diag  = zeros(n_edges, 1);
 
     % Build face list just for polyintegrate3d
-    local_face = convhull(vertices(:,1), vertices(:,2), vertices(:,3));
+   
+    local_face = build_face_list(vertices);
+
     f_cell     = cell(size(local_face,1), 1);
     for ff = 1:size(local_face,1)
-        f_cell{ff} = local_face(ff,:);
+       f_cell{ff} = local_face(ff,:);
     end
 
     for e = 1:n_edges
