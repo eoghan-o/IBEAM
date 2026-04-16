@@ -16,10 +16,10 @@ function A = assemble_stiffness(a, b, elements, nodes, n_nodes, nquad)
 
         A_T  = a * G_T' * W * Gb_T;
 
-        if any(any(isnan(A_T))) || any(any(isinf(A_T)))
-            fprintf('Bad element %d, skipping\n', T);
-            continue
-        end
+        % if any(any(isnan(A_T))) || any(any(isinf(A_T)))
+        %     fprintf('Bad element %d, skipping\n', T);
+        %     continue
+        % end
         A(indices, indices) = A(indices, indices) + A_T;
     end
 end
