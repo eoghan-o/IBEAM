@@ -1,6 +1,6 @@
 % Parameters
 b        = [0; 0; 1];
-k_values = 2:5;
+k_values = 2:3;
 a_values = (1/10).^(0:3);
 nquad    = 2;
 
@@ -15,7 +15,7 @@ H1_err   = zeros(length(k_values), length(a_values));
 L2_err   = zeros(length(k_values), length(a_values));
 h_values = zeros(length(k_values), 1);
 
-%% Create output directory
+% Create output directory
 paraview_dir = fullfile(pwd, 'Paraview');
 if ~exist(paraview_dir, 'dir')
     mkdir(paraview_dir);
@@ -27,6 +27,7 @@ for idx = 1:length(k_values)
     h_values(idx) = h;
 
     [nodes, elements] = generate_mesh3d(h);
+    %[nodes, elements] = generate_mesh3d_hex(h);
     n_nodes = size(nodes, 1);
 
     for a_idx = 1:length(a_values)
@@ -42,7 +43,7 @@ for idx = 1:length(k_values)
         H1_err(idx, a_idx) = H1_semi_error3d(u_h, u_x, u_y, u_z, elements, nodes, nquad);
         L2_err(idx, a_idx) = L2_error3d(u_h, u_true, elements, nodes, nquad);
 
-        %% Export to ParaView
+        % Export to ParaView
         u_ex_nodes = u_true(nodes(:,1), nodes(:,2), nodes(:,3));
         export_to_paraview(nodes, elements, u_h, u_ex_nodes, ...
             fullfile(paraview_dir, sprintf('ibeam3d_k%d_a%g.vtu', k, a)));
