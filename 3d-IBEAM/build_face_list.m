@@ -1,4 +1,16 @@
 function local_face = build_face_list(vertices)
+    if size(vertices,1) == 8
+    local_face = [
+            1 2 3 4;
+            5 6 7 8;
+            1 2 6 5;
+            2 3 7 6;
+            3 4 8 7;
+            4 1 5 8
+        ];
+    return;
+    end
+
     % Compute convex hull to get real faces
     % Each row of real_faces is a triangle of vertex indices (local)
     try
@@ -9,7 +21,7 @@ function local_face = build_face_list(vertices)
     end
     n_v      = size(vertices, 1);
     n_real   = size(real_faces, 1);
-
+    
     % Virtual faces: all triples not already in real_faces
     % (analogous to non-adjacent edges in 2D)
     all_triples = nchoosek(1:n_v, 3);
@@ -26,4 +38,5 @@ function local_face = build_face_list(vertices)
     end
     fake_faces = fake_faces(1:n_fake, :);
     local_face = [real_faces; fake_faces];
+
 end
