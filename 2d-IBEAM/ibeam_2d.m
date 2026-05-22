@@ -11,9 +11,9 @@ close all;
 
 % Parameters
 b          = [0; 1];
-k_values   = 5:5;
-a_values   = (1/10).^(3 ...
-    :3);
+k_values   = 2:8;
+a_values   = (1/10).^(0:3);
+
 nquad      = 3;
 use_poly   = true; %false;   % true: PolyMesher, false: structured quad mesh
 perturb = 0.0;
@@ -138,3 +138,7 @@ function plot_convergence(h_values, err, title_str, a_values, typ)
     end
     grid on
 end
+
+%save('squares.mat',   'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=false, perturb=0
+%save('quads.mat',     'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=false, perturb>0
+save('polygons.mat',  'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=true
