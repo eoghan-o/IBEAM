@@ -1,0 +1,195 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\begin{document}
+
+\begin{table}[h]
+\centering
+\caption{2D mesh refinement, $a = 1$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{squares} & \multicolumn{4}{c}{quadrilaterals} & \multicolumn{4}{c}{gen.~cvx.~polygons} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-1}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & $1.260\text{e}-1$ & 0.93 & $9.973\text{e}-1$ & 0.48 \\
+$2^{-2}$ & $3.191\text{e}-2$ & 2.00 & $5.021\text{e}-1$ & 1.00 & $3.701\text{e}-2$ & 2.09 & $5.436\text{e}-1$ & 1.06 & $3.131\text{e}-2$ & 1.68 & $5.051\text{e}-1$ & 0.85 \\
+$2^{-3}$ & $8.000\text{e}-3$ & 2.00 & $2.516\text{e}-1$ & 1.00 & $8.719\text{e}-3$ & 1.96 & $2.604\text{e}-1$ & 0.98 & $1.635\text{e}-2$ & 1.81 & $3.640\text{e}-1$ & 0.89 \\
+$2^{-4}$ & $2.001\text{e}-3$ & 2.00 & $1.259\text{e}-1$ & 1.00 & $2.248\text{e}-3$ & 1.99 & $1.319\text{e}-1$ & 0.99 & $4.025\text{e}-3$ & 1.86 & $1.820\text{e}-1$ & 0.93 \\
+$2^{-5}$ & $5.004\text{e}-4$ & 2.00 & $6.295\text{e}-2$ & 1.00 & $5.661\text{e}-4$ & 1.99 & $6.619\text{e}-2$ & 1.00 & $2.016\text{e}-3$ & {-} & $1.290\text{e}-1$ & {-} \\
+$2^{-6}$ & $1.251\text{e}-4$ & 2.00 & $3.148\text{e}-2$ & 1.00 & $1.422\text{e}-4$ & 2.00 & $3.316\text{e}-2$ & 1.00 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-7}$ & $3.128\text{e}-5$ & 2.00 & $1.574\text{e}-2$ & 1.00 & $3.555\text{e}-5$ & 2.00 & $1.659\text{e}-2$ & 1.00 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-8}$ & $7.820\text{e}-6$ & {-} & $7.870\text{e}-3$ & {-} & $8.898\text{e}-6$ & {-} & $8.299\text{e}-3$ & {-} & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\bigskip
+
+\begin{table}[h]
+\centering
+\caption{3D mesh refinement, $a = 1$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{tetrahedrons} & \multicolumn{4}{c}{cubes} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-2}$ & $8.639\text{e}-2$ & 1.82 & $9.125\text{e}-1$ & 0.93 & $2.189\text{e}-2$ & 2.01 & $4.347\text{e}-1$ & 1.00 \\
+$2^{-3}$ & $2.439\text{e}-2$ & 1.95 & $4.793\text{e}-1$ & 0.98 & $5.450\text{e}-3$ & 2.00 & $2.179\text{e}-1$ & 1.00 \\
+$2^{-4}$ & $6.302\text{e}-3$ & 1.99 & $2.428\text{e}-1$ & 1.00 & $1.361\text{e}-3$ & 2.00 & $1.090\text{e}-1$ & 1.00 \\
+$2^{-5}$ & $1.589\text{e}-3$ & 2.00 & $1.218\text{e}-1$ & 1.00 & $3.402\text{e}-4$ & 2.00 & $5.452\text{e}-2$ & 1.00 \\
+$2^{-6}$ & $3.981\text{e}-4$ & {-} & $6.094\text{e}-2$ & {-} & $8.504\text{e}-5$ & {-} & $2.726\text{e}-2$ & {-} \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\clearpage
+
+\begin{table}[h]
+\centering
+\caption{2D mesh refinement, $a = 0.1$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{squares} & \multicolumn{4}{c}{quadrilaterals} & \multicolumn{4}{c}{gen.~cvx.~polygons} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-1}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & $3.158\text{e}-1$ & 0.74 & $1.456\text{e}+0$ & 0.54 \\
+$2^{-2}$ & $1.300\text{e}-1$ & 1.81 & $7.582\text{e}-1$ & 1.29 & $1.280\text{e}-1$ & 1.72 & $7.796\text{e}-1$ & 1.28 & $1.109\text{e}-1$ & 1.57 & $7.359\text{e}-1$ & 1.19 \\
+$2^{-3}$ & $3.710\text{e}-2$ & 1.95 & $3.095\text{e}-1$ & 1.20 & $3.877\text{e}-2$ & 1.96 & $3.217\text{e}-1$ & 1.18 & $6.039\text{e}-2$ & 1.77 & $4.639\text{e}-1$ & 1.12 \\
+$2^{-4}$ & $9.571\text{e}-3$ & 1.99 & $1.348\text{e}-1$ & 1.07 & $9.935\text{e}-3$ & 1.99 & $1.423\text{e}-1$ & 1.06 & $1.514\text{e}-2$ & 1.99 & $1.999\text{e}-1$ & 1.02 \\
+$2^{-5}$ & $2.411\text{e}-3$ & 2.00 & $6.414\text{e}-2$ & 1.02 & $2.509\text{e}-3$ & 1.99 & $6.821\text{e}-2$ & 1.01 & $7.237\text{e}-3$ & {-} & $1.368\text{e}-1$ & {-} \\
+$2^{-6}$ & $6.039\text{e}-4$ & 2.00 & $3.163\text{e}-2$ & 1.01 & $6.316\text{e}-4$ & 2.00 & $3.381\text{e}-2$ & 1.01 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-7}$ & $1.510\text{e}-4$ & 2.00 & $1.576\text{e}-2$ & 1.00 & $1.580\text{e}-4$ & 2.00 & $1.685\text{e}-2$ & 1.00 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-8}$ & $3.776\text{e}-5$ & {-} & $7.872\text{e}-3$ & {-} & $3.953\text{e}-5$ & {-} & $8.423\text{e}-3$ & {-} & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\bigskip
+
+\begin{table}[h]
+\centering
+\caption{3D mesh refinement, $a = 0.1$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{tetrahedrons} & \multicolumn{4}{c}{cubes} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-2}$ & $1.135\text{e}-1$ & 1.77 & $9.380\text{e}-1$ & 0.95 & $9.771\text{e}-2$ & 1.78 & $6.709\text{e}-1$ & 1.30 \\
+$2^{-3}$ & $3.335\text{e}-2$ & 1.94 & $4.842\text{e}-1$ & 0.99 & $2.850\text{e}-2$ & 1.95 & $2.722\text{e}-1$ & 1.21 \\
+$2^{-4}$ & $8.702\text{e}-3$ & 1.98 & $2.435\text{e}-1$ & 1.00 & $7.390\text{e}-3$ & 1.99 & $1.174\text{e}-1$ & 1.08 \\
+$2^{-5}$ & $2.199\text{e}-3$ & 2.00 & $1.219\text{e}-1$ & 1.00 & $1.864\text{e}-3$ & 2.00 & $5.564\text{e}-2$ & 1.02 \\
+$2^{-6}$ & $5.514\text{e}-4$ & {-} & $6.095\text{e}-2$ & {-} & $4.670\text{e}-4$ & {-} & $2.740\text{e}-2$ & {-} \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\clearpage
+
+\begin{table}[h]
+\centering
+\caption{2D mesh refinement, $a = 0.01$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{squares} & \multicolumn{4}{c}{quadrilaterals} & \multicolumn{4}{c}{gen.~cvx.~polygons} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-1}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & $4.790\text{e}-1$ & 0.27 & $2.129\text{e}+0$ & 0.15 \\
+$2^{-2}$ & $3.482\text{e}-1$ & 0.85 & $1.749\text{e}+0$ & 0.60 & $3.431\text{e}-1$ & 0.81 & $1.737\text{e}+0$ & 0.56 & $3.033\text{e}-1$ & 0.69 & $1.688\text{e}+0$ & 0.55 \\
+$2^{-3}$ & $1.932\text{e}-1$ & 1.16 & $1.158\text{e}+0$ & 0.82 & $1.953\text{e}-1$ & 1.18 & $1.178\text{e}+0$ & 0.80 & $2.320\text{e}-1$ & 0.90 & $1.365\text{e}+0$ & 0.59 \\
+$2^{-4}$ & $8.644\text{e}-2$ & 1.54 & $6.564\text{e}-1$ & 1.17 & $8.644\text{e}-2$ & 1.53 & $6.780\text{e}-1$ & 1.09 & $1.081\text{e}-1$ & 1.47 & $8.233\text{e}-1$ & 0.88 \\
+$2^{-5}$ & $2.977\text{e}-2$ & 1.83 & $2.919\text{e}-1$ & 1.56 & $2.992\text{e}-2$ & 1.80 & $3.194\text{e}-1$ & 1.38 & $6.255\text{e}-2$ & {-} & $5.946\text{e}-1$ & {-} \\
+$2^{-6}$ & $8.360\text{e}-3$ & 1.95 & $9.891\text{e}-2$ & 1.71 & $8.594\text{e}-3$ & 1.96 & $1.224\text{e}-1$ & 1.48 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-7}$ & $2.159\text{e}-3$ & 1.99 & $3.014\text{e}-2$ & 1.55 & $2.216\text{e}-3$ & 1.98 & $4.375\text{e}-2$ & 1.27 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-8}$ & $5.444\text{e}-4$ & {-} & $1.026\text{e}-2$ & {-} & $5.611\text{e}-4$ & {-} & $1.820\text{e}-2$ & {-} & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\bigskip
+
+\begin{table}[h]
+\centering
+\caption{3D mesh refinement, $a = 0.01$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{tetrahedrons} & \multicolumn{4}{c}{cubes} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-2}$ & $2.164\text{e}-1$ & 1.08 & $1.328\text{e}+0$ & 0.81 & $2.755\text{e}-1$ & 0.72 & $1.617\text{e}+0$ & 0.54 \\
+$2^{-3}$ & $1.027\text{e}-1$ & 1.31 & $7.568\text{e}-1$ & 0.97 & $1.669\text{e}-1$ & 1.08 & $1.112\text{e}+0$ & 0.80 \\
+$2^{-4}$ & $4.129\text{e}-2$ & 1.61 & $3.864\text{e}-1$ & 1.15 & $7.891\text{e}-2$ & 1.50 & $6.386\text{e}-1$ & 1.17 \\
+$2^{-5}$ & $1.352\text{e}-2$ & 1.86 & $1.740\text{e}-1$ & 1.26 & $2.795\text{e}-2$ & 1.82 & $2.841\text{e}-1$ & 1.57 \\
+$2^{-6}$ & $3.734\text{e}-3$ & {-} & $7.276\text{e}-2$ & {-} & $7.932\text{e}-3$ & {-} & $9.565\text{e}-2$ & {-} \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\clearpage
+
+\begin{table}[h]
+\centering
+\caption{2D mesh refinement, $a = 0.001$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{squares} & \multicolumn{4}{c}{quadrilaterals} & \multicolumn{4}{c}{gen.~cvx.~polygons} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-1}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & ${-}$ & $4.979\text{e}-1$ & 0.23 & $2.212\text{e}+0$ & 0.11 \\
+$2^{-2}$ & $3.784\text{e}-1$ & 0.72 & $1.894\text{e}+0$ & 0.47 & $3.752\text{e}-1$ & 0.69 & $1.888\text{e}+0$ & 0.44 & $3.363\text{e}-1$ & 0.59 & $1.841\text{e}+0$ & 0.44 \\
+$2^{-3}$ & $2.289\text{e}-1$ & 0.88 & $1.364\text{e}+0$ & 0.55 & $2.325\text{e}-1$ & 0.89 & $1.393\text{e}+0$ & 0.53 & $2.682\text{e}-1$ & 0.72 & $1.554\text{e}+0$ & 0.43 \\
+$2^{-4}$ & $1.242\text{e}-1$ & 0.98 & $9.343\text{e}-1$ & 0.57 & $1.251\text{e}-1$ & 0.98 & $9.636\text{e}-1$ & 0.54 & $1.471\text{e}-1$ & 1.06 & $1.089\text{e}+0$ & 0.54 \\
+$2^{-5}$ & $6.303\text{e}-2$ & 1.07 & $6.279\text{e}-1$ & 0.62 & $6.349\text{e}-2$ & 1.06 & $6.640\text{e}-1$ & 0.52 & $9.925\text{e}-2$ & {-} & $8.923\text{e}-1$ & {-} \\
+$2^{-6}$ & $3.009\text{e}-2$ & 1.21 & $4.089\text{e}-1$ & 0.74 & $3.047\text{e}-2$ & 1.23 & $4.635\text{e}-1$ & 0.57 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-7}$ & $1.301\text{e}-2$ & 1.49 & $2.452\text{e}-1$ & 1.03 & $1.302\text{e}-2$ & 1.48 & $3.126\text{e}-1$ & 0.65 & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+$2^{-8}$ & $4.646\text{e}-3$ & {-} & $1.204\text{e}-1$ & {-} & $4.668\text{e}-3$ & {-} & $1.998\text{e}-1$ & {-} & ${-}$ & ${-}$ & ${-}$ & ${-}$ \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\bigskip
+
+\begin{table}[h]
+\centering
+\caption{3D mesh refinement, $a = 0.001$, $e_h = u_I - u_h$}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l | cccc | cccc}
+\hline
+$h$ & \multicolumn{4}{c}{tetrahedrons} & \multicolumn{4}{c}{cubes} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord & $\|e_h\|_{L^2}$ & Ord & $|e_h|_{H^1}$ & Ord \\
+\hline
+$2^{-2}$ & $2.381\text{e}-1$ & 0.95 & $1.447\text{e}+0$ & 0.71 & $3.011\text{e}-1$ & 0.59 & $1.761\text{e}+0$ & 0.41 \\
+$2^{-3}$ & $1.234\text{e}-1$ & 1.04 & $8.821\text{e}-1$ & 0.76 & $1.996\text{e}-1$ & 0.80 & $1.322\text{e}+0$ & 0.52 \\
+$2^{-4}$ & $5.992\text{e}-2$ & 1.07 & $5.209\text{e}-1$ & 0.73 & $1.146\text{e}-1$ & 0.93 & $9.209\text{e}-1$ & 0.57 \\
+$2^{-5}$ & $2.855\text{e}-2$ & 1.12 & $3.137\text{e}-1$ & 0.72 & $6.011\text{e}-2$ & 1.04 & $6.214\text{e}-1$ & 0.62 \\
+$2^{-6}$ & $1.318\text{e}-2$ & {-} & $1.905\text{e}-1$ & {-} & $2.920\text{e}-2$ & {-} & $4.047\text{e}-1$ & {-} \\
+\hline
+\end{tabular}
+}%  end resizebox
+\end{table}
+
+\clearpage
+
+\end{document}
