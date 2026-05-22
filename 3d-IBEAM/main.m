@@ -1,6 +1,6 @@
 % Parameters
 b        = [0; 0; 1];
-k_values = 2:3;
+k_values = 2:6;
 a_values = (1/10).^(0:3);
 nquad    = 2;
 
@@ -26,8 +26,8 @@ for idx = 1:length(k_values)
     h = 2^(-k);
     h_values(idx) = h;
 
-    [nodes, elements] = generate_mesh3d(h);
-    %[nodes, elements] = generate_mesh3d_hex(h);
+    %[nodes, elements] = generate_mesh3d(h);
+    [nodes, elements] = generate_mesh3d_hex(h);
     n_nodes = size(nodes, 1);
 
     for a_idx = 1:length(a_values)
