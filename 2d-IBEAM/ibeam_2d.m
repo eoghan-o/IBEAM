@@ -13,6 +13,7 @@ close all;
 b          = [1; 1];
 k_values   = 3:15;
 a_values   = (1/10).^(0:3);
+
 nquad      = 3;
 use_poly   = true; %false;   % true: PolyMesher, false: structured quad mesh
 perturb = 0.0;
@@ -185,3 +186,7 @@ function plot_convergence_nel(n_el_vec, err, title_str, a_values, is_H1)
     legend([legend_entries, {ref_label}], 'Location', 'best');
     grid on;
 end
+
+%save('squares.mat',   'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=false, perturb=0
+%save('quads.mat',     'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=false, perturb>0
+save('polygons.mat',  'h_values', 'L2_err', 'H1_err', 'a_values');  % use_poly=true
