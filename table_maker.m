@@ -8,14 +8,14 @@ clear; clc;
 % 1. CONFIGURE
 % ----------------------------------------------------------
 experiments_2D = {
-    'squares',             'squares.mat';
-    'quadrilaterals',      'quads.mat';
+%    'squares',             'squares.mat';
+%    'quadrilaterals',      'quads.mat';
     'gen.~cvx.~polygons',  'polygons.mat';
 };
 
 experiments_3D = {
-    'tetrahedrons',  'tets.mat';
-    'cubes',         'cubes.mat';
+%    'tetrahedrons',  'tets.mat';
+%    'cubes',         'cubes.mat';
 };
 
 % ----------------------------------------------------------

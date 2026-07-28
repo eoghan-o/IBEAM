@@ -1,5 +1,5 @@
 function [elements, nodes, n_nodes, h] = generate_mesh(n_elements)
-    [~, nodes, elements] = evalc('PolyMesher(@square_domain, n_elements, 100)');
+    [~, nodes, elements] = evalc('PolyMesher(@square_domain, n_elements, 500)');
     
     % Compute average edge length as h
     total_edge = 0;

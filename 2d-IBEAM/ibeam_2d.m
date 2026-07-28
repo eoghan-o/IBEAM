@@ -10,8 +10,8 @@ close all;
 %            'defaultLegendTextColor', 'black')
 
 % Parameters
-b          = [1; 1];
-k_values   = 3:15;
+b          = [0; 1];
+k_values   = 3:9;
 a_values   = (1/10).^(0:3);
 
 nquad      = 3;
