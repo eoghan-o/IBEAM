@@ -1,6 +1,6 @@
 # IBEAM
 
-**IBEAM** stands for **Incidence-Based Edge-Averaged Method**. It is MATLAB code for solving convection–diffusion problems on **general polygonal (2D) and polyhedral (3D) meshes**. The method uses the mesh's edge–vertex incidence structure to build each element's stiffness matrix, with **Bernoulli-function (exponential) edge averaging** of the convection term. **Wachspress** basis functions supply the weights, and the pieces combine as `A_T = α · Gᵀ W G_b`.
+This is the repository for the Incidence-Based Edge-Averaged Method (IBEAM). It is MATLAB code for solving convection–diffusion problems on general polygonal (2D) and polyhedral (3D) meshes. The method uses the mesh's edge–vertex incidence structure to build each element's stiffness matrix, with Bernoulli-function (exponential) edge averaging of the convection term. Wachspress basis functions supply the weights, and the pieces combine as `A_T = Gᵀ W D_α G_b`.
 
 The repository includes 2D and 3D solvers, mesh generators, error and convergence tools, and ParaView export for the 3D results.
 
